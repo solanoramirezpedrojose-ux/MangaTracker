@@ -1,95 +1,136 @@
+
 <template>
-  <div class="page" data-name="home">
-    <div class="navbar">
+  <div class="page mt-page" data-name="home">
+
+    <div class="navbar mt-navbar">
       <div class="navbar-bg"></div>
       <div class="navbar-inner">
-        <div class="title">MangaTracker</div>
+        <div class="mt-brand">
+          <span class="mt-logo">M</span>
+          <span>MangaTracker</span>
+        </div>
+        <div class="mt-navbar-label">MY READING SPACE</div>
       </div>
     </div>
 
-    <div class="page-content">
-      <div class="block">
-        <h1>Mi biblioteca</h1>
-        <p>Organizá y llevá el control de tus mangas.</p>
-      </div>
+    <div class="page-content mt-content">
+      <div class="mt-container">
 
-      <div class="block">
-        <h2>Mis mangas</h2>
-      </div>
+        <section class="mt-welcome">
+          <div>
+            <div class="mt-eyebrow">TU BIBLIOTECA PERSONAL</div>
+            <h1>Mi colección</h1>
+            <p>Organizá tus lecturas y llevá el control de tus mangas.</p>
+          </div>
 
-      <div class="list media-list inset">
-        <ul>
-          ${
-            mangas.length === 0
-              ? $h`
-                <li>
-                  <div class="item-content">
-                    <div class="item-inner">
-                      <div class="item-title">Tu biblioteca está vacía</div>
-                      <div class="item-text">
-                        Agregá un manga para comenzar.
-                      </div>
-                    </div>
+          <a href="/add-manga/" class="button mt-add-button">
+            <span class="mt-plus">+</span>
+            Agregar manga
+          </a>
+        </section>
+
+        <section class="mt-stats">
+
+          <div class="mt-stat-card">
+            <span class="mt-stat-label">TOTAL DE MANGAS</span>
+            <strong>${mangas.length}</strong>
+            <span class="mt-stat-detail">En tu biblioteca</span>
+          </div>
+
+          <div class="mt-stat-card">
+            <span class="mt-stat-label">LEYENDO</span>
+            <strong>${mangas.filter(manga => manga.status === 'Leyendo').length}</strong>
+            <span class="mt-stat-detail">Lecturas activas</span>
+          </div>
+
+          <div class="mt-stat-card">
+            <span class="mt-stat-label">COMPLETADOS</span>
+            <strong>${mangas.filter(manga => manga.status === 'Completado').length}</strong>
+            <span class="mt-stat-detail">Historias terminadas</span>
+          </div>
+
+        </section>
+
+        <section class="mt-library">
+          <div class="mt-section-heading">
+            <div>
+              <h2>Mis mangas</h2>
+              <p>Tu colección personal</p>
+            </div>
+            <span class="mt-total">${mangas.length} registros</span>
+          </div>
+
+          <div class="mt-manga-grid">
+            ${
+              mangas.length === 0
+                ? $h`
+                  <div class="mt-empty">
+                    <div class="mt-empty-symbol">M</div>
+                    <h3>Tu biblioteca está vacía</h3>
+                    <p>Agregá tu primer manga para comenzar.</p>
                   </div>
-                </li>
-              `
-              : mangas.map((manga) => $h`
-                <li>
-                  <div class="item-content">
-                    <div class="item-inner">
-                      <div class="item-title">${manga.title}</div>
+                `
+                : mangas.map((manga) => $h`
+                  <article class="mt-card">
 
-                      <div class="item-subtitle">
-                        Capítulo actual: ${manga.chapter}
+                    <div class="mt-cover">
+                      <span class="mt-cover-top">MANGATRACKER</span>
+                      <span class="mt-cover-initial">
+                        ${manga.title ? manga.title.charAt(0).toUpperCase() : 'M'}
+                      </span>
+                      <span class="mt-cover-bottom">MY COLLECTION</span>
+                    </div>
+
+                    <div class="mt-card-info">
+                      <div class="mt-card-title">${manga.title}</div>
+
+                      <div class="mt-chapter">
+                        Capítulo actual: <strong>${manga.chapter}</strong>
                       </div>
 
-                      <div class="item-text">
-                        Estado: ${manga.status}
-                      </div>
+                      <span class="mt-status ${
+                        manga.status === 'Leyendo'
+                          ? 'is-reading'
+                          : manga.status === 'Completado'
+                            ? 'is-completed'
+                            : 'is-pending'
+                      }">
+                        ${manga.status}
+                      </span>
 
-                      <div class="row">
-                        <div class="col-50">
-                          <button
-                            type="button"
-                            class="button button-fill button-small"
-                            @click="${() => editChapter(manga)}"
-                          >
-                            Editar capítulo
-                          </button>
-                        </div>
-
-                        <div class="col-50">
-                          <button
-                            type="button"
-                            class="button button-outline button-small"
-                            @click="${() => changeStatus(manga)}"
-                          >
-                            Cambiar estado
-                          </button>
-                        </div>
-                      </div>
-
-                      <div class="block">
+                      <div class="mt-card-actions">
                         <button
                           type="button"
-                          class="button button-outline button-small"
+                          class="button mt-action-button"
+                          @click="${() => editChapter(manga)}"
+                        >
+                          Editar capítulo
+                        </button>
+
+                        <button
+                          type="button"
+                          class="button mt-action-button"
+                          @click="${() => changeStatus(manga)}"
+                        >
+                          Cambiar estado
+                        </button>
+
+                        <button
+                          type="button"
+                          class="button mt-delete-button"
                           @click="${() => removeManga(manga)}"
                         >
-                          Eliminar manga
+                          Eliminar
                         </button>
                       </div>
                     </div>
-                  </div>
-                </li>
-              `)
-          }
-        </ul>
-      </div>
 
-      <div class="block">
-        <a href="/add-manga/" class="button button-fill button-round">
-          Agregar manga
-        </a>
+                  </article>
+                `)
+            }
+          </div>
+        </section>
+
       </div>
     </div>
   </div>
@@ -103,6 +144,7 @@ import {
 } from '../js/manga-storage.js';
 
 export default (props, { $f7, $update, $on }) => {
+
   let mangas = getMangas();
 
   const refreshMangas = () => {
@@ -188,3 +230,387 @@ export default (props, { $f7, $update, $on }) => {
   return $render;
 };
 </script>
+
+<style>
+.mt-page {
+  background: #111318;
+  color: #f4f4f6;
+}
+
+.mt-page .page-content {
+  background: #111318;
+  color: #f4f4f6;
+}
+
+.mt-navbar .navbar-bg {
+  background: #15171d;
+  border-bottom: 1px solid #292b34;
+}
+
+.mt-navbar .navbar-inner {
+  padding: 0 5%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.mt-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: #ffffff;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.mt-logo {
+  display: flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  background: #d64b65;
+  border-radius: 10px;
+  color: white;
+  font-weight: 800;
+}
+
+.mt-navbar-label {
+  color: #898b97;
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+.mt-content {
+  padding-bottom: 35px;
+}
+
+.mt-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 38px 24px;
+}
+
+.mt-welcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.mt-eyebrow {
+  color: #d75a70;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.mt-welcome h1 {
+  margin: 9px 0;
+  color: #ffffff;
+  font-size: 34px;
+  font-weight: 750;
+}
+
+.mt-welcome p,
+.mt-section-heading p {
+  margin: 0;
+  color: #9395a1;
+  font-size: 14px;
+}
+
+.mt-add-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: auto;
+  height: 46px;
+  padding: 0 20px;
+  border-radius: 10px;
+  background: #d64b65;
+  color: #ffffff;
+  font-weight: 600;
+  text-transform: none;
+}
+
+.mt-add-button:active {
+  background: #bd3c55;
+}
+
+.mt-plus {
+  font-size: 23px;
+  line-height: 1;
+}
+
+.mt-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 42px;
+}
+
+.mt-stat-card {
+  display: flex;
+  flex-direction: column;
+  padding: 22px;
+  min-height: 112px;
+  border: 1px solid #30323c;
+  border-radius: 14px;
+  background: #1b1e25;
+}
+
+.mt-stat-label {
+  color: #a3a4af;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.mt-stat-card strong {
+  margin: 10px 0 3px;
+  color: #ffffff;
+  font-size: 29px;
+}
+
+.mt-stat-detail {
+  color: #858793;
+  font-size: 12px;
+}
+
+.mt-library {
+  margin-top: 10px;
+}
+
+.mt-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.mt-section-heading h2 {
+  margin: 0 0 6px;
+  color: #ffffff;
+  font-size: 21px;
+}
+
+.mt-total {
+  padding: 7px 11px;
+  border: 1px solid #343641;
+  border-radius: 20px;
+  color: #b3b4bd;
+  font-size: 11px;
+}
+
+.mt-manga-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.mt-card {
+  display: flex;
+  gap: 17px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #30323c;
+  border-radius: 15px;
+  background: #1b1e25;
+}
+
+.mt-cover {
+  display: flex;
+  flex: 0 0 112px;
+  min-height: 166px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 7px;
+  overflow: hidden;
+  border-radius: 9px;
+  background: linear-gradient(145deg, #49202d, #17181e 72%);
+  border: 1px solid #794052;
+}
+
+.mt-cover-top,
+.mt-cover-bottom {
+  color: #e5b9c2;
+  font-size: 8px;
+  letter-spacing: 1.2px;
+}
+
+.mt-cover-initial {
+  color: #ffffff;
+  font-size: 52px;
+  font-weight: 800;
+  text-shadow: 0 3px 15px #d64b65;
+}
+
+.mt-card-info {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.mt-card-title {
+  margin: 3px 0 9px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.mt-chapter {
+  margin-bottom: 12px;
+  color: #a5a6b1;
+  font-size: 12px;
+}
+
+.mt-chapter strong {
+  color: #ffffff;
+}
+
+.mt-status {
+  display: inline-block;
+  padding: 6px 10px;
+  margin-bottom: 15px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.mt-status.is-reading {
+  background: #203e37;
+  color: #85d6b7;
+}
+
+.mt-status.is-completed {
+  background: #34304f;
+  color: #beb2ff;
+}
+
+.mt-status.is-pending {
+  background: #493720;
+  color: #edc27f;
+}
+
+.mt-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: auto;
+}
+
+.mt-action-button,
+.mt-delete-button {
+  width: auto;
+  min-height: 32px;
+  height: auto;
+  padding: 5px 10px;
+  border: 1px solid #41434e;
+  border-radius: 7px;
+  color: #dedee5;
+  font-size: 10px;
+  text-transform: none;
+}
+
+.mt-action-button {
+  background: #292c35;
+}
+
+.mt-delete-button {
+  border-color: #673846;
+  color: #ec8799;
+  background: transparent;
+}
+
+.mt-empty {
+  grid-column: 1 / -1;
+  padding: 55px 20px;
+  border: 1px dashed #41434e;
+  border-radius: 14px;
+  text-align: center;
+  background: #1b1e25;
+}
+
+.mt-empty-symbol {
+  display: inline-flex;
+  width: 55px;
+  height: 55px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: #38212a;
+  color: #e77b90;
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.mt-empty h3 {
+  margin: 15px 0 7px;
+  color: #ffffff;
+}
+
+.mt-empty p {
+  margin: 0;
+  color: #999ba6;
+  font-size: 13px;
+}
+
+@media (max-width: 700px) {
+  .mt-container {
+    padding: 27px 16px;
+  }
+
+  .mt-welcome {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mt-welcome h1 {
+    font-size: 29px;
+  }
+
+  .mt-stats {
+    gap: 8px;
+  }
+
+  .mt-stat-card {
+    padding: 13px;
+    min-height: 105px;
+  }
+
+  .mt-stat-label {
+    font-size: 8px;
+  }
+
+  .mt-stat-card strong {
+    font-size: 24px;
+  }
+
+  .mt-manga-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mt-navbar-label {
+    display: none;
+  }
+
+  .mt-card {
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .mt-cover {
+    flex-basis: 90px;
+    min-height: 135px;
+  }
+
+  .mt-cover-initial {
+    font-size: 42px;
+  }
+}
+</style>
