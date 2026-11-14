@@ -1,6 +1,7 @@
 <template>
   <div class="page" data-name="home">
 
+    <!-- Barra superior -->
     <div class="navbar">
       <div class="navbar-bg"></div>
       <div class="navbar-inner">
@@ -10,16 +11,49 @@
 
     <div class="page-content">
 
+      <!-- Encabezado -->
       <div class="block">
         <h1>Mi biblioteca</h1>
         <p>Organiza los mangas que estás leyendo y lleva el control de tus capítulos.</p>
       </div>
 
+      <!-- Listado de mangas guardados -->
       <div class="block">
         <h2>Mis mangas</h2>
-        <p>Tu biblioteca está vacía.</p>
       </div>
 
+      <div class="list media-list inset">
+        <ul>
+
+          ${mangas.length === 0 ? $h`
+            <li>
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-title">Tu biblioteca está vacía.</div>
+                  <div class="item-subtitle">Agrega tu primer manga.</div>
+                </div>
+              </div>
+            </li>
+          ` : mangas.map((manga) => $h`
+            <li>
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-title">${manga.title}</div>
+                  <div class="item-subtitle">
+                    Capítulo actual: ${manga.chapter}
+                  </div>
+                  <div class="item-text">
+                    Estado: ${manga.status}
+                  </div>
+                </div>
+              </div>
+            </li>
+          `)}
+
+        </ul>
+      </div>
+
+      <!-- Acceso al formulario -->
       <div class="block">
         <a href="/add-manga/" class="button button-fill button-round">
           Agregar manga
@@ -31,7 +65,21 @@
 </template>
 
 <script>
-export default () => {
+import { getMangas } from '../js/manga-storage.js';
+
+export default (props, { $update, $on }) => {
+
+  // Recupera los mangas almacenados.
+  let mangas = getMangas();
+
+  // Actualiza la biblioteca al regresar a esta pantalla.
+  const refreshMangas = () => {
+    mangas = getMangas();
+    $update();
+  };
+
+  $on('pageBeforeIn', refreshMangas);
+
   return $render;
 }
 </script>

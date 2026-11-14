@@ -18,45 +18,63 @@
         <p>Completa la información del manga.</p>
       </div>
 
+      <!-- Formulario de registro -->
       <div class="list">
         <ul>
-
-          <li class="item-content item-input">
-            <div class="item-inner">
-              <div class="item-title item-label">Nombre del manga</div>
-              <div class="item-input-wrap">
-                <input type="text" placeholder="Ejemplo: One Piece" />
+          <li>
+            <div class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-title item-label">Nombre del manga</div>
+                <div class="item-input-wrap">
+                  <input
+                    type="text"
+                    placeholder="Ejemplo: One Piece"
+                    @input="${updateTitle}"
+                  />
+                </div>
               </div>
             </div>
           </li>
 
-          <li class="item-content item-input">
-            <div class="item-inner">
-              <div class="item-title item-label">Capítulo actual</div>
-              <div class="item-input-wrap">
-                <input type="number" min="0" placeholder="Ejemplo: 10" />
+          <li>
+            <div class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-title item-label">Capítulo actual</div>
+                <div class="item-input-wrap">
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="Ejemplo: 10"
+                    @input="${updateChapter}"
+                  />
+                </div>
               </div>
             </div>
           </li>
 
-          <li class="item-content item-input">
-            <div class="item-inner">
-              <div class="item-title item-label">Estado de lectura</div>
-              <div class="item-input-wrap">
-                <select>
-                  <option value="Leyendo">Leyendo</option>
-                  <option value="Pendiente">Pendiente</option>
-                  <option value="Completado">Completado</option>
-                </select>
+          <li>
+            <div class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-title item-label">Estado de lectura</div>
+                <div class="item-input-wrap">
+                  <select @change="${updateStatus}">
+                    <option value="Leyendo">Leyendo</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Completado">Completado</option>
+                  </select>
+                </div>
               </div>
             </div>
           </li>
-
         </ul>
       </div>
 
       <div class="block">
-        <button type="button" class="button button-fill button-round">
+        <button
+          type="button"
+          class="button button-fill button-round"
+          @click="${saveManga}"
+        >
           Guardar manga
         </button>
       </div>
@@ -66,7 +84,67 @@
 </template>
 
 <script>
-export default () => {
+import { getMangas, saveMangas } from '../js/manga-storage.js';
+
+export default (props, { $f7, $f7router }) => {
+
+  // Datos del formulario
+  let title = '';
+  let chapter = '';
+  let status = 'Leyendo';
+
+  const updateTitle = (event) => {
+    title = event.target.value;
+  };
+
+  const updateChapter = (event) => {
+    chapter = event.target.value;
+  };
+
+  const updateStatus = (event) => {
+    status = event.target.value;
+  };
+
+  // Valida y guarda el manga
+  const saveManga = () => {
+
+    if (!title.trim()) {
+      $f7.dialog.alert('Debes escribir el nombre del manga.');
+      return;
+    }
+
+    if (
+      chapter.trim() === '' ||
+      !Number.isInteger(Number(chapter)) ||
+      Number(chapter) < 0
+    ) {
+      $f7.dialog.alert('Ingresa un número de capítulo válido.');
+      return;
+    }
+
+    try {
+      const mangas = getMangas();
+
+      const newManga = {
+        id: Date.now(),
+        title: title.trim(),
+        chapter: Number(chapter),
+        status: status
+      };
+
+      mangas.push(newManga);
+      saveMangas(mangas);
+
+      $f7.dialog.alert('Manga guardado correctamente.', () => {
+        $f7router.navigate('/');
+      });
+
+    } catch (error) {
+      console.error('Error al guardar el manga:', error);
+      $f7.dialog.alert('No se pudo guardar el manga.');
+    }
+  };
+
   return $render;
 }
 </script>
