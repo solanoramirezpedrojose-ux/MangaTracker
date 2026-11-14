@@ -1,0 +1,25 @@
+{
+  "cwd": "C:\\Users\\solan\\Desktop\\MangaTracker\\app",
+  "type": [
+    "web",
+    "capacitor"
+  ],
+  "name": "MangaTracker",
+  "framework": "core",
+  "template": "single-view",
+  "bundler": "vite",
+  "cssPreProcessor": false,
+  "theming": {
+    "customColor": false,
+    "color": "#007aff",
+    "darkMode": false,
+    "iconFonts": true
+  },
+  "customBuild": false,
+  "pkg": "com.mangatracker.app",
+  "capacitor": {
+    "platforms": [
+      "android"
+    ]
+  }
+}
