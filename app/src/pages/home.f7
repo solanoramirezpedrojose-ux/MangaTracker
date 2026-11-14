@@ -1,91 +1,27 @@
 <template>
   <div class="page" data-name="home">
 
-    <!-- Barra superior -->
     <div class="navbar">
       <div class="navbar-bg"></div>
       <div class="navbar-inner">
-        <div class="left">
-          <a href="#" class="link icon-only">
-            <i class="icon f7-icons">books_vertical</i>
-          </a>
-        </div>
         <div class="title">MangaTracker</div>
-        <div class="right">
-          <a href="/form/" class="link icon-only">
-            <i class="icon f7-icons">plus</i>
-          </a>
-        </div>
       </div>
     </div>
 
-    <!-- Contenido principal -->
     <div class="page-content">
 
       <div class="block">
         <h1>Mi biblioteca</h1>
-        <p>Administra los mangas que estás leyendo.</p>
+        <p>Organiza los mangas que estás leyendo y lleva el control de tus capítulos.</p>
       </div>
 
-      <!-- Manga destacado -->
       <div class="block">
-        <div class="card">
-          <div class="card-content card-content-padding">
-
-            <div class="manga-info">
-              <div class="manga-cover">
-                <div class="cover-text">MANGA<br>01</div>
-              </div>
-
-              <div class="manga-details">
-                <h2>Mi manga actual</h2>
-                <p class="manga-author">Capítulo 45</p>
-                <p>Estado: Leyendo</p>
-
-                <div class="progressbar">
-                  <span></span>
-                </div>
-
-                <p class="progress-text">45% completado</p>
-              </div>
-            </div>
-
-          </div>
-        </div>
+        <h2>Mis mangas</h2>
+        <p>Tu biblioteca está vacía.</p>
       </div>
 
-      <!-- Sección de biblioteca -->
-      <div class="block-title">MI BIBLIOTECA</div>
-
       <div class="block">
-        <div class="row">
-
-          <div class="col-50">
-            <div class="card manga-card">
-              <div class="card-content card-content-padding">
-                <div class="small-cover">MANGA<br>02</div>
-                <b>En progreso</b>
-                <p>Capítulo actual: 12</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-50">
-            <div class="card manga-card">
-              <div class="card-content card-content-padding">
-                <div class="small-cover">MANGA<br>03</div>
-                <b>Pendiente</b>
-                <p>Aún no iniciado</p>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Botón para agregar -->
-      <div class="block">
-        <a href="/form/" class="button button-fill button-large">
+        <a href="/add-manga/" class="button button-fill button-round">
           Agregar manga
         </a>
       </div>

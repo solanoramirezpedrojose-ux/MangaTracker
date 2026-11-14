@@ -1,18 +1,6 @@
 <template>
-  <div class="page" data-name="home">
-    <div class="navbar">
-      <div class="navbar-bg"></div>
-      <div class="navbar-inner">
-        <div class="title">MangaTracker</div>
-      </div>
-    </div>
-
-    <div class="page-content">
-      <div class="block">
-        <h1>Mi biblioteca</h1>
-        <p>Organiza los mangas que estás leyendo.</p>
-      </div>
-    </div>
+  <div id="app">
+    <div class="view view-main view-init" data-url="/"></div>
   </div>
 </template>
 

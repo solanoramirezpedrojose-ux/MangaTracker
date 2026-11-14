@@ -1,0 +1,72 @@
+<template>
+  <div class="page" data-name="add-manga">
+
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner">
+        <div class="left">
+          <a href="#" class="link back">Volver</a>
+        </div>
+        <div class="title">Agregar manga</div>
+      </div>
+    </div>
+
+    <div class="page-content">
+
+      <div class="block">
+        <h2>Nuevo manga</h2>
+        <p>Completa la información del manga.</p>
+      </div>
+
+      <div class="list">
+        <ul>
+
+          <li class="item-content item-input">
+            <div class="item-inner">
+              <div class="item-title item-label">Nombre del manga</div>
+              <div class="item-input-wrap">
+                <input type="text" placeholder="Ejemplo: One Piece" />
+              </div>
+            </div>
+          </li>
+
+          <li class="item-content item-input">
+            <div class="item-inner">
+              <div class="item-title item-label">Capítulo actual</div>
+              <div class="item-input-wrap">
+                <input type="number" min="0" placeholder="Ejemplo: 10" />
+              </div>
+            </div>
+          </li>
+
+          <li class="item-content item-input">
+            <div class="item-inner">
+              <div class="item-title item-label">Estado de lectura</div>
+              <div class="item-input-wrap">
+                <select>
+                  <option value="Leyendo">Leyendo</option>
+                  <option value="Pendiente">Pendiente</option>
+                  <option value="Completado">Completado</option>
+                </select>
+              </div>
+            </div>
+          </li>
+
+        </ul>
+      </div>
+
+      <div class="block">
+        <button type="button" class="button button-fill button-round">
+          Guardar manga
+        </button>
+      </div>
+
+    </div>
+  </div>
+</template>
+
+<script>
+export default () => {
+  return $render;
+}
+</script>
