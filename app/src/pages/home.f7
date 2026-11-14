@@ -1,6 +1,7 @@
 <template>
   <div class="page mt-page" data-name="home">
 
+    <!-- Encabezado principal de MangaTracker. -->
     <div class="navbar mt-navbar">
       <div class="navbar-bg"></div>
       <div class="navbar-inner">
@@ -15,6 +16,7 @@
     <div class="page-content mt-content">
       <div class="mt-container">
 
+        <!-- Bienvenida y acceso al formulario para agregar mangas. -->
         <section class="mt-welcome">
           <div>
             <div class="mt-eyebrow">TU BIBLIOTECA PERSONAL</div>
@@ -28,6 +30,7 @@
           </a>
         </section>
 
+        <!-- Resumen de la cantidad de mangas por estado. -->
         <section class="mt-stats">
           <div class="mt-stat-card">
             <span class="mt-stat-label">TOTAL DE MANGAS</span>
@@ -48,6 +51,7 @@
           </div>
         </section>
 
+        <!-- Biblioteca: muestra tarjetas dinámicas con los mangas guardados. -->
         <section class="mt-library">
           <div class="mt-section-heading">
             <div>
@@ -57,6 +61,7 @@
             <span class="mt-total">${mangas.length} registros</span>
           </div>
 
+          <!-- Si no hay mangas, muestra un mensaje; si hay, recorre la lista. -->
           <div class="mt-manga-grid">
             ${
               mangas.length === 0
@@ -69,6 +74,8 @@
                 `
                 : mangas.map((manga) => $h`
                   <article class="mt-card">
+
+                    <!-- Selecciona una portada según el título del manga. -->
                     ${
                       (manga.title || '').trim().toLowerCase() === 'one piece'
                         ? $h`
@@ -79,17 +86,27 @@
                             />
                           </div>
                         `
-                        : $h`
-                          <div class="mt-cover">
-                            <span class="mt-cover-top">MANGATRACKER</span>
-                            <span class="mt-cover-initial">
-                              ${manga.title ? manga.title.charAt(0).toUpperCase() : 'M'}
-                            </span>
-                            <span class="mt-cover-bottom">MY COLLECTION</span>
-                          </div>
-                        `
+                        : (manga.title || '').trim().toLowerCase() === 'gintama'
+                          ? $h`
+                            <div class="mt-cover mt-cover-image">
+                              <img
+                                src="/images/gintama-vol1.jpg"
+                                alt="Portada de Gintama, volumen 1"
+                              />
+                            </div>
+                          `
+                          : $h`
+                            <div class="mt-cover">
+                              <span class="mt-cover-top">MANGATRACKER</span>
+                              <span class="mt-cover-initial">
+                                ${manga.title ? manga.title.charAt(0).toUpperCase() : 'M'}
+                              </span>
+                              <span class="mt-cover-bottom">MY COLLECTION</span>
+                            </div>
+                          `
                     }
 
+                    <!-- Información del manga y botones de administración. -->
                     <div class="mt-card-info">
                       <div class="mt-card-title">${manga.title}</div>
 
@@ -97,6 +114,7 @@
                         Capítulo actual: <strong>${manga.chapter}</strong>
                       </div>
 
+                      <!-- El color cambia según el estado de lectura. -->
                       <span class="mt-status ${
                         manga.status === 'Leyendo'
                           ? 'is-reading'
@@ -108,6 +126,8 @@
                       </span>
 
                       <div class="mt-card-actions">
+
+                        <!-- Permite modificar el capítulo actual. -->
                         <button
                           type="button"
                           class="button mt-action-button"
@@ -116,6 +136,7 @@
                           Editar capítulo
                         </button>
 
+                        <!-- Permite cambiar el estado de lectura. -->
                         <button
                           type="button"
                           class="button mt-action-button"
@@ -124,6 +145,7 @@
                           Cambiar estado
                         </button>
 
+                        <!-- Permite eliminar el manga de la biblioteca. -->
                         <button
                           type="button"
                           class="button mt-delete-button"
@@ -145,6 +167,7 @@
 </template>
 
 <script>
+// Funciones para leer, actualizar y eliminar mangas del almacenamiento local.
 import {
   getMangas,
   updateManga,
@@ -152,13 +175,17 @@ import {
 } from '../js/manga-storage.js';
 
 export default (props, { $f7, $update, $on }) => {
+
+  // Carga los mangas guardados cuando se abre la pantalla.
   let mangas = getMangas();
 
+  // Vuelve a leer la biblioteca y actualiza la pantalla.
   const refreshMangas = () => {
     mangas = getMangas();
     $update();
   };
 
+  // Permite cambiar el capítulo actual de un manga.
   const editChapter = (manga) => {
     $f7.dialog.prompt(
       'Ingrese el nuevo capítulo:',
@@ -178,6 +205,7 @@ export default (props, { $f7, $update, $on }) => {
     );
   };
 
+  // Muestra las opciones para cambiar el estado de lectura.
   const changeStatus = (manga) => {
     $f7.dialog.create({
       title: 'Cambiar estado',
@@ -208,6 +236,7 @@ export default (props, { $f7, $update, $on }) => {
     }).open();
   };
 
+  // Pide confirmación antes de eliminar un manga de la biblioteca.
   const removeManga = (manga) => {
     $f7.dialog.create({
       title: 'Eliminar manga',
@@ -232,6 +261,7 @@ export default (props, { $f7, $update, $on }) => {
     }).open();
   };
 
+  // Actualiza los datos cada vez que el usuario vuelve a esta pantalla.
   $on('pageBeforeIn', refreshMangas);
 
   return $render;
@@ -239,6 +269,8 @@ export default (props, { $f7, $update, $on }) => {
 </script>
 
 <style>
+
+/* Colores generales del fondo y del texto. */
 .mt-page {
   background: #111318;
   color: #f4f4f6;
@@ -249,6 +281,7 @@ export default (props, { $f7, $update, $on }) => {
   color: #f4f4f6;
 }
 
+/* Barra superior de navegación. */
 .mt-navbar .navbar-bg {
   background: #15171d;
   border-bottom: 1px solid #292b34;
@@ -287,6 +320,7 @@ export default (props, { $f7, $update, $on }) => {
   letter-spacing: 2px;
 }
 
+/* Espaciado y distribución de la pantalla principal. */
 .mt-content {
   padding-bottom: 35px;
 }
@@ -297,6 +331,7 @@ export default (props, { $f7, $update, $on }) => {
   padding: 38px 24px;
 }
 
+/* Encabezado de bienvenida. */
 .mt-welcome {
   display: flex;
   align-items: center;
@@ -326,6 +361,7 @@ export default (props, { $f7, $update, $on }) => {
   font-size: 14px;
 }
 
+/* Botón para registrar un manga nuevo. */
 .mt-add-button {
   display: inline-flex;
   align-items: center;
@@ -350,6 +386,7 @@ export default (props, { $f7, $update, $on }) => {
   line-height: 1;
 }
 
+/* Tarjetas con las estadísticas de la biblioteca. */
 .mt-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -385,6 +422,7 @@ export default (props, { $f7, $update, $on }) => {
   font-size: 12px;
 }
 
+/* Encabezado de la sección de mangas. */
 .mt-library {
   margin-top: 10px;
 }
@@ -410,6 +448,7 @@ export default (props, { $f7, $update, $on }) => {
   font-size: 11px;
 }
 
+/* Cuadrícula y tarjetas de la biblioteca. */
 .mt-manga-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -427,10 +466,15 @@ export default (props, { $f7, $update, $on }) => {
   background: #1b1e25;
 }
 
+/* Tamaño y apariencia de las portadas provisionales. */
 .mt-cover {
   display: flex;
   flex: 0 0 112px;
+  width: 112px;
+  height: 166px;
   min-height: 166px;
+  align-self: flex-start;
+  box-sizing: border-box;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
@@ -455,13 +499,13 @@ export default (props, { $f7, $update, $on }) => {
   text-shadow: 0 3px 15px #d64b65;
 }
 
+/* Tamaño y posición de las portadas reales. */
 .mt-cover-image {
-  align-self: flex-start;
   flex: 0 0 112px;
   width: 112px;
   height: 166px;
   min-height: 166px;
-  box-sizing: border-box;
+  align-self: flex-start;
   padding: 0;
   overflow: hidden;
   background: #17181e;
@@ -473,9 +517,11 @@ export default (props, { $f7, $update, $on }) => {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  object-position: top center;
   border-radius: 8px;
 }
 
+/* Información que aparece junto a cada portada. */
 .mt-card-info {
   display: flex;
   flex: 1;
@@ -502,6 +548,7 @@ export default (props, { $f7, $update, $on }) => {
   color: #ffffff;
 }
 
+/* Colores para identificar los estados de lectura. */
 .mt-status {
   display: inline-block;
   padding: 6px 10px;
@@ -526,6 +573,7 @@ export default (props, { $f7, $update, $on }) => {
   color: #edc27f;
 }
 
+/* Botones de edición, estado y eliminación. */
 .mt-card-actions {
   display: flex;
   flex-wrap: wrap;
@@ -556,6 +604,7 @@ export default (props, { $f7, $update, $on }) => {
   background: transparent;
 }
 
+/* Mensaje que aparece cuando no hay mangas registrados. */
 .mt-empty {
   grid-column: 1 / -1;
   padding: 55px 20px;
@@ -588,6 +637,8 @@ export default (props, { $f7, $update, $on }) => {
   color: #999ba6;
   font-size: 13px;
 }
+
+/* Adaptación del diseño para pantallas pequeñas. */
 @media (max-width: 700px) {
   .mt-container {
     padding: 27px 16px;
@@ -628,32 +679,26 @@ export default (props, { $f7, $update, $on }) => {
   }
 
   .mt-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 17px;
-  min-width: 0;
-  padding: 16px;
-  border: 1px solid #30323c;
-  border-radius: 15px;
-  background: #1b1e25;
+    gap: 12px;
+    padding: 12px;
   }
 
-
-
   .mt-cover {
-    flex-basis: 90px;
+    flex: 0 0 90px;
+    width: 90px;
+    height: 135px;
+    min-height: 135px;
+  }
+
+  .mt-cover-image {
+    flex: 0 0 90px;
+    width: 90px;
+    height: 135px;
     min-height: 135px;
   }
 
   .mt-cover-initial {
     font-size: 42px;
-  }
-
-  .mt-cover-image {
-    flex-basis: 90px;
-    width: 90px;
-    height: 135px;
-    min-height: 135px;
   }
 }
 
