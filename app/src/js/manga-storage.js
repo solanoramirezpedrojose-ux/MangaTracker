@@ -1,4 +1,3 @@
-// Clave donde se guarda la biblioteca.
 const STORAGE_KEY = 'mangatracker_mangas';
 
 // Recupera los mangas guardados.
@@ -19,7 +18,7 @@ export function saveMangas(mangas) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(mangas));
 }
 
-// Actualiza los datos de un manga existente.
+// Actualiza un manga existente.
 export function updateManga(id, changes) {
   const mangas = getMangas();
 
@@ -27,9 +26,7 @@ export function updateManga(id, changes) {
     (manga) => String(manga.id) === String(id)
   );
 
-  if (!exists) {
-    return false;
-  }
+  if (!exists) return false;
 
   const updatedMangas = mangas.map((manga) =>
     String(manga.id) === String(id)
@@ -38,6 +35,21 @@ export function updateManga(id, changes) {
   );
 
   saveMangas(updatedMangas);
+  return true;
+}
 
+// Elimina un manga de la biblioteca.
+export function deleteManga(id) {
+  const mangas = getMangas();
+
+  const updatedMangas = mangas.filter(
+    (manga) => String(manga.id) !== String(id)
+  );
+
+  if (updatedMangas.length === mangas.length) {
+    return false;
+  }
+
+  saveMangas(updatedMangas);
   return true;
 }

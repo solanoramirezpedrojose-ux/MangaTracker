@@ -1,6 +1,5 @@
 <template>
   <div class="page" data-name="home">
-
     <div class="navbar">
       <div class="navbar-bg"></div>
       <div class="navbar-inner">
@@ -9,68 +8,81 @@
     </div>
 
     <div class="page-content">
-
       <div class="block">
         <h1>Mi biblioteca</h1>
-        <p>Organiza los mangas que estás leyendo y lleva el control de tus capítulos.</p>
+        <p>Organizá y llevá el control de tus mangas.</p>
       </div>
 
       <div class="block">
         <h2>Mis mangas</h2>
       </div>
 
-      <!-- Lista dinámica -->
       <div class="list media-list inset">
         <ul>
-
-          ${mangas.length === 0 ? $h`
-            <li>
-              <div class="item-content">
-                <div class="item-inner">
-                  <div class="item-title">Tu biblioteca está vacía.</div>
-                </div>
-              </div>
-            </li>
-          ` : mangas.map((manga) => $h`
-            <li>
-              <div class="item-content">
-                <div class="item-inner">
-
-                  <div class="item-title">${manga.title}</div>
-
-                  <div class="item-subtitle">
-                    Capítulo actual: ${manga.chapter}
-                  </div>
-
-                  <div class="item-text">
-                    Estado: ${manga.status}
-                  </div>
-
-                  <div class="row">
-                    <div class="col-50">
-                      <button
-                        type="button"
-                        class="button button-fill button-small"
-                        @click="${() => editChapter(manga)}">
-                        Editar capítulo
-                      </button>
-                    </div>
-
-                    <div class="col-50">
-                      <button
-                        type="button"
-                        class="button button-outline button-small"
-                        @click="${() => changeStatus(manga)}">
-                        Cambiar estado
-                      </button>
+          ${
+            mangas.length === 0
+              ? $h`
+                <li>
+                  <div class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">Tu biblioteca está vacía</div>
+                      <div class="item-text">
+                        Agregá un manga para comenzar.
+                      </div>
                     </div>
                   </div>
+                </li>
+              `
+              : mangas.map((manga) => $h`
+                <li>
+                  <div class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">${manga.title}</div>
 
-                </div>
-              </div>
-            </li>
-          `)}
+                      <div class="item-subtitle">
+                        Capítulo actual: ${manga.chapter}
+                      </div>
 
+                      <div class="item-text">
+                        Estado: ${manga.status}
+                      </div>
+
+                      <div class="row">
+                        <div class="col-50">
+                          <button
+                            type="button"
+                            class="button button-fill button-small"
+                            @click="${() => editChapter(manga)}"
+                          >
+                            Editar capítulo
+                          </button>
+                        </div>
+
+                        <div class="col-50">
+                          <button
+                            type="button"
+                            class="button button-outline button-small"
+                            @click="${() => changeStatus(manga)}"
+                          >
+                            Cambiar estado
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="block">
+                        <button
+                          type="button"
+                          class="button button-outline button-small"
+                          @click="${() => removeManga(manga)}"
+                        >
+                          Eliminar manga
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              `)
+          }
         </ul>
       </div>
 
@@ -79,74 +91,60 @@
           Agregar manga
         </a>
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
-import { getMangas, updateManga } from '../js/manga-storage.js';
+import {
+  getMangas,
+  updateManga,
+  deleteManga
+} from '../js/manga-storage.js';
 
 export default (props, { $f7, $update, $on }) => {
-
-  // Recupera la biblioteca.
   let mangas = getMangas();
 
-  // Actualiza el listado.
   const refreshMangas = () => {
     mangas = getMangas();
     $update();
   };
 
-  // Permite modificar el capítulo.
   const editChapter = (manga) => {
     $f7.dialog.prompt(
-      'Escribe el nuevo capítulo:',
+      'Ingrese el nuevo capítulo:',
       'Editar capítulo',
       (value) => {
-        const chapter = Number(value);
-
-        if (
-          value.trim() === '' ||
-          !Number.isInteger(chapter) ||
-          chapter < 0
-        ) {
-          $f7.dialog.alert('Ingresa un capítulo válido.');
+        if (!value || !value.trim()) {
+          $f7.dialog.alert('Ingrese un capítulo válido.');
           return;
         }
 
         updateManga(manga.id, {
-          chapter: chapter
+          chapter: value.trim()
         });
 
         refreshMangas();
-      },
-      null,
-      String(manga.chapter)
+      }
     );
   };
 
-  // Permite seleccionar un nuevo estado.
   const changeStatus = (manga) => {
-
     $f7.dialog.create({
       title: 'Cambiar estado',
-      text: 'Selecciona el nuevo estado de lectura.',
-
-      verticalButtons: true,
-
+      text: 'Seleccione el nuevo estado del manga:',
       buttons: [
-        {
-          text: 'Leyendo',
-          onClick: () => {
-            updateManga(manga.id, { status: 'Leyendo' });
-            refreshMangas();
-          }
-        },
         {
           text: 'Pendiente',
           onClick: () => {
             updateManga(manga.id, { status: 'Pendiente' });
+            refreshMangas();
+          }
+        },
+        {
+          text: 'Leyendo',
+          onClick: () => {
+            updateManga(manga.id, { status: 'Leyendo' });
             refreshMangas();
           }
         },
@@ -156,18 +154,37 @@ export default (props, { $f7, $update, $on }) => {
             updateManga(manga.id, { status: 'Completado' });
             refreshMangas();
           }
-        },
-        {
-          text: 'Cancelar'
         }
       ]
-
     }).open();
   };
 
-  // Actualiza la pantalla al regresar a la biblioteca.
+  const removeManga = (manga) => {
+    $f7.dialog.create({
+      title: 'Eliminar manga',
+      text: `¿Está seguro de que desea eliminar "${manga.title}" de su biblioteca?`,
+      buttons: [
+        {
+          text: 'Cancelar'
+        },
+        {
+          text: 'Eliminar',
+          onClick: () => {
+            const deleted = deleteManga(manga.id);
+
+            if (deleted) {
+              refreshMangas();
+            } else {
+              $f7.dialog.alert('No se pudo encontrar el manga.');
+            }
+          }
+        }
+      ]
+    }).open();
+  };
+
   $on('pageBeforeIn', refreshMangas);
 
   return $render;
-}
+};
 </script>
