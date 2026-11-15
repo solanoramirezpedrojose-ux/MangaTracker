@@ -35,7 +35,22 @@
               </div>
             </div>
           </li>
-
+          <!--Espacio Autor-->
+          <li>
+            <div class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-title">Autor</div>
+                <div class="item-input-wrap">
+                  <input
+                    type="text"
+                    placeholder="Ejemplo: Akira Toriyama"
+                    maxlength="100"
+                    @input="${updateAuthor}"
+                  />
+                </div>
+              </div>
+            </div>
+          </li>
           <li>
             <div class="item-content item-input">
               <div class="item-inner">
