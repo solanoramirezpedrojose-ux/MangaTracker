@@ -1,5 +1,5 @@
 <template>
-  <div class="page" data-name="add-manga">
+  <div class="page dark mt-add-page" data-name="add-manga">
 
     <div class="navbar">
       <div class="navbar-bg"></div>
@@ -84,7 +84,7 @@
             </div>
           </li>
           <!--Espacio portada del manga-->
-          <li>
+          <li class="mt-add-cover">
             <div class="item-content">
               <div class="item-inner">
                 <div class="item-title" style="margin-bottom: 12px;">
@@ -133,7 +133,7 @@
             <div class="item-content item-input">
               <div class="item-inner">
                 <div class="item-title item-label">Estado de lectura</div>
-                <div class="item-input-wrap">
+                <div class="item-input-wrap mt-status-select">
                   <select @change="${updateStatus}">
                     <option value="Leyendo">Leyendo</option>
                     <option value="Pendiente">Pendiente</option>
@@ -159,6 +159,284 @@
     </div>
   </div>
 </template>
+
+<style>
+  /*Fondo y colores principales*/
+  .mt-add-page {
+    --f7-page-bg-color: #1e2225;
+    --f7-bars-bg-color: #171a1d;
+    --f7-theme-color: #d63360;
+    --f7-theme-color-rgb: 214, 51, 96;
+    --f7-list-bg-color: transparent;
+    --f7-list-item-border-color: transparent;
+    background: #1e2225;
+    color: #f5f5f5;
+  }
+
+  /*Barra de navegacion*/
+  .mt-add-page .navbar-bg{
+    background: #171a1d;;
+  }
+  .mt-add-page .navbar-inner{
+    padding: 0 20px;
+  }
+  .mt-add-page .navbar .title {
+    color: #ffffff;
+    font-weight: 700;
+  }
+  .mt-add-page .navbar .link {
+    color: #eb5177;
+    font-weight: 600;
+  }
+
+  /*Contenido principal*/
+.mt-add-page .page-content {
+  background: #1e2225;
+  padding: 24px 16px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mt-add-page .page-content > .block,
+.mt-add-page .page-content > .list {
+  width: 100%;
+  max-width: 780px;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+
+  /*Titulo y descripcion*/
+  .mt-add-page .page-content > .block:first-child {
+    padding: 0 4px;
+    margin-bottom: 24px;
+  }
+
+  .mt-add-page h2{
+    font-size: 28px;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 8px;
+  }
+
+  .mt-add-page .block p {
+    color: #9ca3af;
+    font-size: 14px;
+    margin: 0;
+  }
+
+  /*Contenedor del formulario*/
+  .mt-add-page .list{
+    background: #262b2f;
+    border: 1px solid #3b4248;
+    border-radius: 18px;
+    padding: 24px;
+    margin-top: 0;
+  }
+
+  .mt-add-page .list ul {
+    background: transparent;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+  }
+
+  .mt-add-page .list ul::before,
+  .mt-add-page .list ul::after,
+  .mt-add-page .item-inner::after,
+  .mt-add-page .item-input-wrap::after {
+    display: none !important;
+  }
+
+  .mt-add-page .list li {
+    min-width: 0;
+  }
+
+  .mt-add-page .item-content {
+    padding-left: 0 !important;
+  }
+
+  .mt-add-page .item-inner {
+    display: block;
+    padding: 0 !important;
+    min-height: auto;
+  }
+
+  /*Etiquetas*/
+  .mt-add-page .item-title.item-label,
+  .mt-add-page .item-title {
+    width: auto;
+    color: #d1d5db;
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+
+  /*Campos de texto*/
+  .mt-add-page .item-input-wrap input,
+  .mt-add-page .item-input-wrap select,
+  .mt-add-page .item-input-wrap textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background: #191d20 !important;
+    border: 1px solid #464c52 !important;
+    border-radius: 10px;
+    color: #ffffff !important;
+    font-size: 14px;
+    padding: 12px 14px !important;
+    height: 46px;
+  }
+
+  .mt-add-page .item-input-wrap textarea {
+    min-height: 115px;
+    resize: vertical;
+  }
+  
+  .mt-add-page input::placeholder,
+  .mt-add-page textarea::placeholder {
+    color: #858e97;
+  }
+
+  .mt-add-page .item-input-wrap input:focus,
+  .mt-add-page .item-input-wrap textarea:focus,
+  .mt-add-page .item-input-wrap select:focus {
+    border-color: #e34472 !important;
+    outline: none;
+  }
+
+  /*Sinopsis ocupa el ancho completp*/
+  .mt-add-page .list li:nth-child(4) {
+    grid-column: 1 / -1;
+  }
+
+  /*Apartado de la portada*/
+  .mt-add-page .mt-add-cover {
+    grid-column: 1 / -1;
+    border: 1px dashed #5a414d;
+    background: #202428;
+    padding: 22px;
+    border-radius: 14px;
+  }
+
+  .mt-add-page .mt-add-cover .item-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .mt-add-page .mt-add-cover .item-title {
+    color: #f5f5f5;
+    font-size: 15px;
+  }
+
+  /*Boton para seleccionar la imagen*/
+  .mt-add-page label[for="manga-cover"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #d63360 !important;
+    color: #ffffff !important;
+    border-radius: 9px;
+    padding: 0 24px !important;
+    min-height: 43px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .mt-add-page label[for="manga-cover"]:hover {
+    background: #e54a75 !important;
+  }
+
+  /*Vista previa de la portada*/
+  .mt-add-page #cover-preview {
+    width: 140px !important;
+    height: 190px !important;
+    object-fit: cover;
+    border: 2px solid #d63360;
+    border-radius: 10px !important;
+    margin: 8px auto 0 !important;
+  }
+
+  /*Boton guardar*/
+  .mt-add-page .page-content > .block:last-child {
+    padding: 0;
+    margin-top: 24px;
+  }
+
+  .mt-add-page .page-content > .block:last-child .button {
+    background: #d63360 !important;
+    color: #ffffff !important;
+    height: 48px;
+    border-radius: 11px;
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: none;
+  }
+
+  .mt-add-page .page-content > .block:last-child .button:hover {
+    background: #e54a75 !important;
+  }
+
+  /*Adaptacion para celulares*/
+  @media (max-width: 600px) {
+    .mt-add-page .page-content {
+      padding: 20px 12px 36px;
+    }
+
+    .mt-add-page h2 {
+      font-size: 24px;
+    }
+
+    .mt-add-page .list {
+      padding: 18px 15px;
+    }
+
+    .mt-add-page .list ul {
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .mt-add-page .list li:nth-child(4),
+    .mt-add-page .mt-add-cover {
+      grid-column: 1;
+    }
+  }
+
+
+/* Flecha del selector de estado */
+.mt-add-page .mt-status-select {
+  position: relative;
+}
+
+.mt-add-page .mt-status-select select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 42px !important;
+  cursor: pointer;
+}
+
+
+/* Flecha del estado de lectura */
+.mt-add-page .mt-status-select::after {
+  content: "";
+  display: block !important;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid #d63360;
+  border-bottom: 2px solid #d63360;
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+
+</style>
 
 <script>
 import { getMangas, saveMangas } from '../js/manga-storage.js';
