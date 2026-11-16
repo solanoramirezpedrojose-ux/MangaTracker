@@ -21,6 +21,7 @@
       <!-- Formulario de registro -->
       <div class="list">
         <ul>
+          <!--Espacio nombre del manga-->
           <li>
             <div class="item-content item-input">
               <div class="item-inner">
@@ -39,7 +40,7 @@
           <li>
             <div class="item-content item-input">
               <div class="item-inner">
-                <div class="item-title">Autor</div>
+                <div class="item-title item-label">Autor</div>
                 <div class="item-input-wrap">
                   <input
                     type="text"
@@ -51,6 +52,38 @@
               </div>
             </div>
           </li>
+          <!--Genero del manga-->
+          <li>
+            <div class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-title item-label">Genero</div>
+                <div class="item-input-wrap">
+                  <input 
+                    type="text"
+                    placeholder="Ejemplo: Fantasia oscura"
+                    maxlength="80"
+                    @input="${updateGenre}"
+                  />
+                </div>
+              </div>
+            </div>
+          </li>
+          <!--Sinopsis-->
+          <li>
+            <div class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-title item-label">Sinopsis</div>
+                <div class="item-input-wrap">
+                  <textarea
+                    placeholder="Escribe una descripcion del manga"
+                    maxlength="500"
+                    @input="${updateSynopsis}"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </li>
+          <!--Espacio capitulo actual-->
           <li>
             <div class="item-content item-input">
               <div class="item-inner">
@@ -66,7 +99,7 @@
               </div>
             </div>
           </li>
-
+          <!--Espacio estado de la lectura-->
           <li>
             <div class="item-content item-input">
               <div class="item-inner">
@@ -107,6 +140,9 @@ export default (props, { $f7, $f7router }) => {
   let title = '';
   let chapter = '';
   let status = 'Leyendo';
+  let author = '';
+  let genre = '';
+  let synopsis = '';
 
   const updateTitle = (event) => {
     title = event.target.value;
@@ -118,6 +154,18 @@ export default (props, { $f7, $f7router }) => {
 
   const updateStatus = (event) => {
     status = event.target.value;
+  };
+
+  const updateAuthor = (event) => {
+    author = event.target.value;
+  };
+
+  const updateGenre = (event) => {
+    genre = event.target.value;
+  };
+
+  const updateSynopsis = (event) => {
+    synopsis = event.target.value;
   };
 
   // Valida y guarda el manga
@@ -137,12 +185,30 @@ export default (props, { $f7, $f7router }) => {
       return;
     }
 
+    if (!author.trim()) {
+      $f7.dialog.alert('Debes escribir el autor del manga');
+      return;
+    }
+
+    if (!genre.trim()) {
+      $f7.dialog.alert('Debes escribir el genero del manga');
+      return;
+    }
+
+    if (synopsis.trim().length > 500) {
+      $f7.dialog.alert('La sinopsis no puede superar los 500 caracteres')
+      return;
+    }
+
     try {
       const mangas = getMangas();
 
       const newManga = {
         id: Date.now(),
         title: title.trim(),
+        author: author.trim(),
+        genre: genre.trim(),
+        synopsis: synopsis.trim(),
         chapter: Number(chapter),
         status: status
       };
