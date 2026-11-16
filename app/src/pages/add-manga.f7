@@ -21,6 +21,7 @@
       <!-- Formulario de registro -->
       <div class="list">
         <ul>
+          <!--Espacio nombre del manga-->
           <li>
             <div class="item-content item-input">
               <div class="item-inner">
@@ -35,7 +36,83 @@
               </div>
             </div>
           </li>
+          <!--Espacio Autor-->
+          <li>
+            <div class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-title item-label">Autor</div>
+                <div class="item-input-wrap">
+                  <input
+                    type="text"
+                    placeholder="Ejemplo: Akira Toriyama"
+                    maxlength="100"
+                    @input="${updateAuthor}"
+                  />
+                </div>
+              </div>
+            </div>
+          </li>
+          <!--Genero del manga-->
+          <li>
+            <div class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-title item-label">Genero</div>
+                <div class="item-input-wrap">
+                  <input 
+                    type="text"
+                    placeholder="Ejemplo: Fantasia oscura"
+                    maxlength="80"
+                    @input="${updateGenre}"
+                  />
+                </div>
+              </div>
+            </div>
+          </li>
+          <!--Sinopsis-->
+          <li>
+            <div class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-title item-label">Sinopsis</div>
+                <div class="item-input-wrap">
+                  <textarea
+                    placeholder="Escribe una descripcion del manga"
+                    maxlength="500"
+                    @input="${updateSynopsis}"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </li>
+          <!--Espacio portada del manga-->
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title" style="margin-bottom: 12px;">
+                  Portada del manga
+                </div>
 
+                <!--Boton para seleccionar imagen-->
+                <label for="manga-cover" class="button button-fill" style="display: inline-flex; width: auto; padding: 0 20px; cursor: pointer;">
+                  Seleccionar imagen
+                </label>
+                <!--Campo de archivo oculto-->
+                <input 
+                  id="manga-cover"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  style="display: none;"
+                  @change="${updateCover}"
+                />
+                <!--Vista previa-->
+                <img
+                  id="cover-preview"
+                  alt="Vista previa de la portada"
+                  style="display: none; width: 120px; height: 160px; object-fit: cover; margin-top: 15px; border-radius: 8px;"
+                />
+              </div>
+            </div>
+          </li>
+          <!--Espacio capitulo actual-->
           <li>
             <div class="item-content item-input">
               <div class="item-inner">
@@ -51,7 +128,7 @@
               </div>
             </div>
           </li>
-
+          <!--Espacio estado de la lectura-->
           <li>
             <div class="item-content item-input">
               <div class="item-inner">
@@ -92,6 +169,11 @@ export default (props, { $f7, $f7router }) => {
   let title = '';
   let chapter = '';
   let status = 'Leyendo';
+  let author = '';
+  let genre = '';
+  let synopsis = '';
+  let cover = '';
+  let processingCover = false;
 
   const updateTitle = (event) => {
     title = event.target.value;
@@ -103,6 +185,88 @@ export default (props, { $f7, $f7router }) => {
 
   const updateStatus = (event) => {
     status = event.target.value;
+  };
+
+  const updateAuthor = (event) => {
+    author = event.target.value;
+  };
+
+  const updateGenre = (event) => {
+    genre = event.target.value;
+  };
+
+  const updateSynopsis = (event) => {
+    synopsis = event.target.value;
+  };
+
+  //Programar la seleccion y vista previa
+  const updateCover = async (event) => {
+    const input = event.target;
+    const file = input.files[0];
+    const preview = input.closest('.page').querySelector('#cover-preview');
+
+    cover = '';
+    preview.removeAttribute('src');
+    preview.style.display = 'none';
+
+    if (!file) {
+      return;
+    }
+
+    const validTypes = ['image/jpeg','image/png','image/webp'];
+    if (!validTypes.includes(file.type)) {
+      $f7.dialog.alert('Seleccione una imagen JPG, PNG o WebP');
+      input.value = '';
+      return;
+    }
+
+    if (file.size > 3 * 1024 * 1024) {
+      $f7.dialog.alert('La imagen no puede superar los 3 MB');
+      input.value = '';
+      return;
+    }
+
+    processingCover = true;
+
+    try{
+      const image = await createImageBitmap(file);
+
+      const scale = Math.min(
+        300 / image.width,
+        420 / image.height,
+        1
+      );
+
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(image.width * scale));
+      canvas.height = Math.max(1, Math.round(image.height * scale));
+
+      const context = canvas.getContext('2d');
+      context.fillStyle = '#ffffff';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      context.drawImage(image, 0, 0, canvas.width, canvas.height)
+
+      const processedCover = canvas.toDataURL('image/jpeg', 0.7);
+      image.close();
+
+      if (processedCover.length > 180000) {
+        throw new Error('La imagen procesada sigue siendo demasiado grande');
+      }
+      cover = processedCover;
+      preview.src = cover;
+      preview.style.display = 'block';
+
+    } catch (error) {
+      console.error('Error al procesar la imagen:', error);
+      cover = '';
+      preview.style.display = 'none';
+      input.value = '';
+      $f7.dialog.alert('No se pudo procesar la portada. Pruebe con otra imagen');
+
+    } finally {
+      processingCover = false;
+    }
   };
 
   // Valida y guarda el manga
@@ -122,14 +286,38 @@ export default (props, { $f7, $f7router }) => {
       return;
     }
 
+    if (!author.trim()) {
+      $f7.dialog.alert('Debes escribir el autor del manga');
+      return;
+    }
+
+    if (!genre.trim()) {
+      $f7.dialog.alert('Debes escribir el genero del manga');
+      return;
+    }
+
+    if (synopsis.trim().length > 500) {
+      $f7.dialog.alert('La sinopsis no puede superar los 500 caracteres')
+      return;
+    }
+
+    if (processingCover) {
+      $f7.dialog.alert('Espera a que termine de procesarse la portada');
+      return;
+    }
+
     try {
       const mangas = getMangas();
 
       const newManga = {
         id: Date.now(),
         title: title.trim(),
+        author: author.trim(),
+        genre: genre.trim(),
+        synopsis: synopsis.trim(),
         chapter: Number(chapter),
-        status: status
+        status: status,
+        cover: cover
       };
 
       mangas.push(newManga);
