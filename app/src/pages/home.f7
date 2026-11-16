@@ -76,35 +76,46 @@
                   <article class="mt-card">
 
                     <!-- Selecciona una portada según el título del manga. -->
+                    
                     ${
-                      (manga.title || '').trim().toLowerCase() === 'one piece'
+                      manga.cover
                         ? $h`
                           <div class="mt-cover mt-cover-image">
                             <img
-                              src="/images/one-piece-vol1.jpg"
-                              alt="Portada de One Piece, volumen 1"
+                              src="${manga.cover}"
+                              alt="Portada de ${manga.title}"
                             />
                           </div>
                         `
-                        : (manga.title || '').trim().toLowerCase() === 'gintama'
+                        : (manga.title || '').trim().toLowerCase() === 'one piece'
                           ? $h`
                             <div class="mt-cover mt-cover-image">
                               <img
-                                src="/images/gintama-vol1.jpg"
-                                alt="Portada de Gintama, volumen 1"
+                                src="/images/one-piece-vol1.jpg"
+                                alt="Portada de One Piece"
                               />
                             </div>
                           `
-                          : $h`
-                            <div class="mt-cover">
-                              <span class="mt-cover-top">MANGATRACKER</span>
-                              <span class="mt-cover-initial">
-                                ${manga.title ? manga.title.charAt(0).toUpperCase() : 'M'}
-                              </span>
-                              <span class="mt-cover-bottom">MY COLLECTION</span>
-                            </div>
-                          `
+                          : (manga.title || '').trim().toLowerCase() === 'gintama'
+                            ? $h`
+                              <div class="mt-cover mt-cover-image">
+                                <img
+                                  src="/images/gintama-vol1.jpg"
+                                  alt="Portada de Gintama"
+                                />
+                              </div>
+                            `
+                            : $h`
+                              <div class="mt-cover">
+                                <span class="mt-cover-top">MANGATRACKER</span>
+                                <span class="mt-cover-initial">
+                                  ${manga.title ? manga.title.charAt(0).toUpperCase() : 'M'}
+                                </span>
+                                <span class="mt-cover-bottom">MY COLLECTION</span>
+                              </div>
+                            `
                     }
+
 
                     <!-- Información del manga y botones de administración. -->
                     <div class="mt-card-info">
