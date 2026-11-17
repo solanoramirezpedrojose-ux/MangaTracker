@@ -173,6 +173,15 @@
                         >
                           ${expandedMangaId === manga.id ? 'Ocultar detalles' : 'Ver detalles'}
                         </button>
+
+                        <!-- Permite modificar los datos descriptivos del manga. -->
+                        <button
+                          type="button"
+                          class="button mt-action-button"
+                          @click="${() => editMangaDetails(manga)}"
+                        >
+                          Editar ficha
+                        </button>
                       </div>
                     </div>
 
@@ -271,6 +280,69 @@ export default (props, { $f7, $update, $on }) => {
   const refreshMangas = () => {
     mangas = getMangas();
     $update();
+  };
+
+  // Permite editar el autor, el género y la sinopsis de un manga.
+  // Los datos se actualizan en localStorage sin borrar el resto del registro.
+  const editMangaDetails = (manga) => {
+    $f7.dialog.prompt(
+      'Ingrese el nombre del autor:',
+      'Editar ficha',
+      (authorValue) => {
+        const author = authorValue.trim();
+
+        if (!author) {
+          $f7.dialog.alert('El autor no puede quedar vacío.');
+          return;
+        }
+
+        $f7.dialog.prompt(
+          'Ingrese el género del manga:',
+          'Editar ficha',
+          (genreValue) => {
+            const genre = genreValue.trim();
+
+            if (!genre) {
+              $f7.dialog.alert('El género no puede quedar vacío.');
+              return;
+            }
+
+            $f7.dialog.prompt(
+              'Ingrese la sinopsis del manga:',
+              'Editar ficha',
+              (synopsisValue) => {
+                const synopsis = synopsisValue.trim();
+
+                if (synopsis.length > 500) {
+                  $f7.dialog.alert('La sinopsis no puede superar los 500 caracteres.');
+                  return;
+                }
+
+                // Actualiza solamente los datos descriptivos del manga.
+                const updated = updateManga(manga.id, {
+                  author,
+                  genre,
+                  synopsis
+                });
+
+                if (updated) {
+                  refreshMangas();
+                  $f7.dialog.alert('La ficha del manga se actualizó correctamente.');
+                } else {
+                  $f7.dialog.alert('No se pudo encontrar el manga.');
+                }
+              },
+              null,
+              manga.synopsis || ''
+            );
+          },
+          null,
+          manga.genre || ''
+        );
+      },
+      null,
+      manga.author || ''
+    );
   };
 
   // Permite cambiar el capítulo actual de un manga.
