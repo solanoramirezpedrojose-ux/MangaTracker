@@ -489,7 +489,7 @@ export default (props, { $f7, $update, $on }) => {
 }
 
 .mt-container {
-  max-width: 1080px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 38px 24px;
 }
@@ -614,7 +614,7 @@ export default (props, { $f7, $update, $on }) => {
 /* Cuadrícula y tarjetas de la biblioteca. */
 .mt-manga-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 18px;
 }
 
@@ -740,7 +740,7 @@ export default (props, { $f7, $update, $on }) => {
 /* Botones de edición, estado y eliminación. */
 .mt-card-actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 7px;
   margin-top: auto;
 }
