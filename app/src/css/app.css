@@ -1,1 +1,63 @@
-/* Your app custom styles here */
+/* =====================================
+   VENTANAS EMERGENTES DE MANGATRACKER
+   ===================================== */
+
+/* Fondo general de los diálogos. */
+.dialog,
+.dialog .dialog-inner,
+.dialog .dialog-buttons {
+  background: #1b1e25 !important;
+  color: #f4f4f6 !important;
+}
+
+/* Bordes redondeados de la ventana. */
+.dialog {
+  border: 1px solid #343641;
+  border-radius: 20px !important;
+  overflow: hidden;
+}
+
+/* Título de la ventana. */
+.dialog .dialog-title {
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+/* Texto descriptivo. */
+.dialog .dialog-text {
+  color: #a5a6b1 !important;
+}
+
+/* Botones de las ventanas. */
+.dialog .dialog-button {
+  color: #e87990 !important;
+  font-weight: 600;
+  border-radius: 9px;
+  transition: all 0.2s ease;
+}
+
+/* Separadores de los botones. */
+.dialog .dialog-buttons {
+  border-top: 1px solid #30323c;
+}
+
+/* Campos para editar capítulos. */
+.dialog input {
+  background: #15171d !important;
+  color: #ffffff !important;
+  border-bottom: 2px solid #d64b65 !important;
+}
+
+/* Efecto al pasar el cursor por los botones. */
+@media (hover: hover) {
+  .dialog .dialog-button:hover {
+    background: #49303a !important;
+    color: #ffffff !important;
+  }
+}
+
+/* Efecto al presionar. */
+.dialog .dialog-button:active {
+  background: #bd3c55 !important;
+  color: #ffffff !important;
+}

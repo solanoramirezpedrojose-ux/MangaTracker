@@ -164,8 +164,62 @@
                         >
                           Eliminar
                         </button>
+
+                        <!-- Despliega la ficha completa sin salir de la biblioteca. -->
+                        <button
+                          type="button"
+                          class="button mt-action-button mt-details-button"
+                          @click="${() => toggleDetails(manga)}"
+                        >
+                          ${expandedMangaId === manga.id ? 'Ocultar detalles' : 'Ver detalles'}
+                        </button>
                       </div>
                     </div>
+
+                    <!-- Ficha ampliada con portada, autor, género y sinopsis. -->
+                    ${
+                      expandedMangaId === manga.id
+                        ? $h`
+                          <div class="mt-detail-panel">
+                            <div class="mt-detail-cover">
+                              ${
+                                getMangaCover(manga)
+                                  ? $h`
+                                    <img
+                                      src="${getMangaCover(manga)}"
+                                      alt="Portada de ${manga.title}"
+                                    />
+                                  `
+                                  : $h`
+                                    <div class="mt-detail-placeholder">
+                                      ${manga.title ? manga.title.charAt(0).toUpperCase() : 'M'}
+                                    </div>
+                                  `
+                              }
+                            </div>
+
+                            <div class="mt-detail-content">
+                              <div class="mt-detail-heading">Ficha del manga</div>
+
+                              <div class="mt-detail-field">
+                                <span>Autor</span>
+                                <strong>${manga.author || 'No especificado'}</strong>
+                              </div>
+
+                              <div class="mt-detail-field">
+                                <span>Género</span>
+                                <strong>${manga.genre || 'No especificado'}</strong>
+                              </div>
+
+                              <div class="mt-detail-field mt-detail-synopsis">
+                                <span>Sinopsis</span>
+                                <p>${manga.synopsis || 'Todavía no se ha agregado una sinopsis para este manga.'}</p>
+                              </div>
+                            </div>
+                          </div>
+                        `
+                        : ''
+                    }
                   </article>
                 `)
             }
@@ -189,6 +243,29 @@ export default (props, { $f7, $update, $on }) => {
 
   // Carga los mangas guardados cuando se abre la pantalla.
   let mangas = getMangas();
+
+  // Guarda el identificador del manga cuya ficha está desplegada.
+  let expandedMangaId = null;
+
+  // Devuelve la portada correspondiente al manga.
+  const getMangaCover = (manga) => {
+    if (manga.cover) return manga.cover;
+
+    const title = (manga.title || '').trim().toLowerCase();
+
+    if (title === 'one piece') return '/images/one-piece-vol1.jpg';
+    if (title === 'gintama') return '/images/gintama-vol1.jpg';
+
+    return '';
+  };
+
+  // Abre o cierra la ficha detallada de una tarjeta.
+  const toggleDetails = (manga) => {
+    expandedMangaId =
+      expandedMangaId === manga.id ? null : manga.id;
+
+    $update();
+  };
 
   // Vuelve a leer la biblioteca y actualiza la pantalla.
   const refreshMangas = () => {
@@ -262,6 +339,9 @@ export default (props, { $f7, $update, $on }) => {
             const deleted = deleteManga(manga.id);
 
             if (deleted) {
+              if (expandedMangaId === manga.id) {
+                expandedMangaId = null;
+              }
               refreshMangas();
             } else {
               $f7.dialog.alert('No se pudo encontrar el manga.');
@@ -468,6 +548,7 @@ export default (props, { $f7, $update, $on }) => {
 
 .mt-card {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   gap: 17px;
   min-width: 0;
@@ -615,6 +696,89 @@ export default (props, { $f7, $update, $on }) => {
   background: transparent;
 }
 
+/* Botón que despliega la ficha detallada. */
+.mt-details-button {
+  border-color: #794052;
+  color: #f0a0af;
+}
+
+/* Panel ampliado que aparece dentro de la tarjeta. */
+.mt-detail-panel {
+  display: flex;
+  flex: 0 0 100%;
+  width: 100%;
+  gap: 20px;
+  padding-top: 17px;
+  margin-top: 2px;
+  border-top: 1px solid #343641;
+}
+
+.mt-detail-cover {
+  flex: 0 0 150px;
+  width: 150px;
+  min-height: 220px;
+  overflow: hidden;
+  border: 1px solid #794052;
+  border-radius: 10px;
+  background: #15171d;
+}
+
+.mt-detail-cover img {
+  display: block;
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+  object-position: top center;
+}
+
+.mt-detail-placeholder {
+  display: flex;
+  width: 100%;
+  height: 220px;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 58px;
+  font-weight: 800;
+  background: linear-gradient(145deg, #49202d, #17181e 72%);
+}
+
+.mt-detail-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.mt-detail-heading {
+  margin-bottom: 14px;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.mt-detail-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 13px;
+}
+
+.mt-detail-field span {
+  color: #d75a70;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.mt-detail-field strong,
+.mt-detail-field p {
+  margin: 0;
+  color: #d6d7df;
+  font-size: 13px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
 /* Mensaje que aparece cuando no hay mangas registrados. */
 .mt-empty {
   grid-column: 1 / -1;
@@ -710,6 +874,21 @@ export default (props, { $f7, $update, $on }) => {
 
   .mt-cover-initial {
     font-size: 42px;
+  }
+
+  .mt-detail-panel {
+    gap: 12px;
+  }
+
+  .mt-detail-cover {
+    flex-basis: 105px;
+    width: 105px;
+    min-height: 155px;
+  }
+
+  .mt-detail-cover img,
+  .mt-detail-placeholder {
+    height: 155px;
   }
 }
 
