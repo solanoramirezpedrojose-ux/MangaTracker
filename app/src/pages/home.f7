@@ -964,4 +964,35 @@ export default (props, { $f7, $update, $on }) => {
   }
 }
 
+.mt-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.mt-card-actions .button {
+  flex: 1 1 calc(50% - 8px);
+  min-width: 120px;
+  text-align: center;
+  justify-content: center;
+}
+
+/* En pantallas pequeñas, ponerlos uno debajo del otro */
+@media (max-width: 480px) {
+  .mt-card-actions {
+    flex-direction: column;
+  }
+
+  .mt-card-actions .button {
+    width: 100%;
+    flex: none;
+  }
+}
+
+.mt-card-actions .button {
+  font-size: 13px;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
 </style>
