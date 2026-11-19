@@ -1,3 +1,4 @@
+//Con esta clase se identiica la biblioteca guardada
 const STORAGE_KEY = 'mangatracker_mangas';
 
 // Recupera los mangas guardados.
@@ -14,11 +15,13 @@ export function getMangas() {
 }
 
 // Guarda la biblioteca.
+//Convierte la lista a JSON y la almacena localmente
 export function saveMangas(mangas) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(mangas));
 }
 
 // Actualiza un manga existente.
+//Busca el registro por ID y modifica sus propiedades
 export function updateManga(id, changes) {
   const mangas = getMangas();
 
@@ -39,6 +42,7 @@ export function updateManga(id, changes) {
 }
 
 // Elimina un manga de la biblioteca.
+//Filtra el registro por ID y guarda la lista actualizada
 export function deleteManga(id) {
   const mangas = getMangas();
 

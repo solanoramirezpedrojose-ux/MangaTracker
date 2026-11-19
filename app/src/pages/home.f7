@@ -7,6 +7,7 @@
       <div class="navbar-inner">
         <div class="mt-brand">
           <span class="mt-logo">M</span>
+          <!--Cambiar el nombre visible de la aplicacion-->
           <span>MangaTracker</span>
         </div>
         <div class="mt-navbar-label">MY READING SPACE</div>
@@ -20,10 +21,12 @@
         <section class="mt-welcome">
           <div>
             <div class="mt-eyebrow">TU BIBLIOTECA PERSONAL</div>
+            <!--Cambiar el titulo principal de la biblioteca-->
             <h1>Mi colección</h1>
+            <!--Cambiar la descripcion de la pantalla principal-->
             <p>Organizá tus lecturas y llevá el control de tus mangas.</p>
           </div>
-
+          <!--Boton para abrir el formulario-->
           <a href="/add-manga/" class="button mt-add-button">
             <span class="mt-plus">+</span>
             Agregar manga
@@ -31,6 +34,7 @@
         </section>
 
         <!-- Resumen de la cantidad de mangas por estado. -->
+         <!--Contadores de mangas segun su estado-->
         <section class="mt-stats">
           <div class="mt-stat-card">
             <span class="mt-stat-label">TOTAL DE MANGAS</span>
@@ -269,6 +273,7 @@ export default (props, { $f7, $update, $on }) => {
   };
 
   // Abre o cierra la ficha detallada de una tarjeta.
+  //Cambia la ficha que se encuentra visible
   const toggleDetails = (manga) => {
     expandedMangaId =
       expandedMangaId === manga.id ? null : manga.id;
@@ -277,6 +282,7 @@ export default (props, { $f7, $update, $on }) => {
   };
 
   // Vuelve a leer la biblioteca y actualiza la pantalla.
+  //Actualiza el listado cuando regresamos del formulario
   const refreshMangas = () => {
     mangas = getMangas();
     $update();
