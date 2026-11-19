@@ -20,16 +20,16 @@ import App from '../app.f7';
 
 var device = getDevice();
 var app = new Framework7({
-  name: 'MangaTracker', // App name
+  name: 'MangaTracker', // App name Nombre inerno de la aplicacion
   theme: 'auto', // Automatic theme detection
 
 
-  el: '#app', // App root element
-  component: App, // App main component
+  el: '#app', // App root element Elemto principal de la aplicacion
+  component: App, // App main  Componente principal
   // App store
-  store: store,
+  store: store, //Estado compartido de framework7
   // App routes
-  routes: routes,
+  routes: routes,//Rutas de navegacion
 
 
   // Input settings
